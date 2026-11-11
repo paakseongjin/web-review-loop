@@ -1,6 +1,6 @@
 ---
 name: web-review-loop
-description: Evidence-based review loop for AI-generated websites built with HTML, CSS, and JavaScript (including TypeScript and common frameworks). Use when reviewing, auditing, or fixing an AI-built website or landing page before publishing, when the user asks whether a website is safe, fast, accessible, responsive, or well-structured, or when a website fix must be verified rather than trusted. Renders the site and inspects real output (screenshots, console errors, measured metrics), runs mechanical gates first, then isolated lens reviews, uses evidence appropriate to each finding, and ends with a plain-language verdict a non-developer can act on.
+description: Review or improve websites and web application code, including AI-generated sites and landing pages. Use for web code review, prelaunch QA, UI and responsive checks, accessibility, security, performance, maintainability, or website structure, including requests to fix and recheck findings. Use available browser and source evidence, document gaps, and explain findings and remedies in plain language.
 ---
 
 # Web Review Loop — Evidence-Based Review for AI-Generated Websites
@@ -38,7 +38,7 @@ specializes it for front-end websites. For back-end data safety
    evidence.
 7. **Secrets and personal data are never printed.** API keys found in
    client-side code are reported by type and location only.
-8. **Bound retries.** After repeated unsuccessful attempts, report the evidence and blocker rather than hiding failures. Do not treat a fixed arbitrary attempt count as proof of impossibility.
+8. **Bound retries.** By default attempt at most three distinct fixes per finding, verifying each. Stop earlier if no safe new approach is available; after three, mark that finding BLOCKED, explain attempts and next steps, and continue independent in-scope work. This is an operational limit, not proof that the issue cannot be fixed. Honor a user-specified limit.
 9. **Plain language out.** The final verdict is written for a
    non-developer: what a visitor would experience, not code jargon.
    Technical detail goes in the appendix of the report.
@@ -71,6 +71,7 @@ specializes it for front-end websites. For back-end data safety
    with confirmation or fails with a visible reason; no page shows
    another visitor's data; contact details and prices match the
    operator's source of truth exactly.
+4. Select key journeys and concrete checks before starting: at each selected viewport, verify that essential content is readable without unintended horizontal overflow; exercise the main action safely; record relevant console errors and failed requests. A check passes only when actually performed and its criterion met; untested flows and unsupported criteria are SKIPPED or UNVERIFIED. Adapt checks and viewports to the site and task; none is a universal accessibility or publication certificate.
 
 ### Phase 1 — Mechanical gate (run before reviewing)
 
@@ -89,7 +90,7 @@ Gate rule: a relevant red gate caps the verdict below `PUBLISHABLE`; explain pre
 
 ### Phase 2 — Render and observe
 
-Serve or open the site. For each in-scope page × 3 widths
+Serve or open the site using its existing documented preview and available browser. Follow `references/web-gates.md` for tool selection, safe fallback and environment limitations. For each in-scope page × 3 widths
 (1440 / 768 / 390):
 
 - screenshot (keep the files; they are evidence),
@@ -135,6 +136,8 @@ the root cause → re-render affected pages at all 3 widths →
 re-run the gate items it touched → log in
 `templates/fix-loop-log.md`. Preserve the existing worktree and describe a safe way to undo only your changes; do not create commits or overwrite existing work without authorization.
 
+After each focused batch, compare the relevant criteria with the baseline and log evidence. Finish when requested, actionable findings are fixed and verified, or further work is blocked, out of scope, or requires unavailable access; report each remaining finding and skipped verification. Review-only requests stop after reporting. Never loop merely to eliminate minor aesthetic preferences.
+
 Forbidden: redesigning unrelated pages, swapping frameworks or
 libraries, bulk reformatting, "improving" copy or visuals the
 operator did not ask about.
@@ -166,8 +169,7 @@ Use `templates/web-review-report.md`. It must contain:
   accessible; automated tools only detect a subset of WCAG issues,
   so keyboard and screen-reader spot checks in Lens 4 are mandatory
   on `business`/`commerce` tiers.
-- Single image ≤ 200KB unless it is a full-width hero (≤ 400KB);
-  total page weight target ≤ 2MB on key pages.
+- Optional starting budgets, not standards: single image ≤ 200KB (hero ≤ 400KB) and total page weight ≤ 2MB; adapt to the project and evidence.
 - Zero console errors on key flows. Zero broken local links.
 
 ## Mode shortcuts
