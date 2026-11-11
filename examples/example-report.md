@@ -1,59 +1,46 @@
-# Web Review Report — 맑은치과 소개 사이트 — 2026-11-11 (EXAMPLE — fictional)
+# 웹 리뷰 보고서 — 가상 소개 사이트 (예시)
 
-## Verdict: PUBLISHABLE WITH CONDITIONS
+> 이 문서는 작성 형식을 보여 주기 위한 가상 예시입니다. 아래 경로와 측정값은 실제 검사 결과가 아닙니다.
 
-Plain-language summary:
-- What was checked: 5 pages, all opened in a browser at phone,
-  tablet, and desktop widths. The built-in static check, an
-  accessibility scan, and a speed measurement were actually run.
-  The reservation form was submitted once with good data and once
-  with bad data.
-- What a visitor would run into today: on a phone, the price table
-  on the treatment page sticks out past the screen edge, so the
-  prices on the right cannot be read. Everything else a visitor
-  touches — menu, phone-call button, reservation form — works.
-- What remains risky: the accessibility score from the machine scan
-  is 100, but the keyboard check found the popup close button cannot
-  be reached by keyboard. That is scheduled as a condition below,
-  not hidden.
+## 먼저 알아둘 내용
 
-Tier: business · Oracle: REAL (operator's price list file) ·
-Rendered: YES
+- **현재 판단:** 게시 보류. 문의 팝업을 키보드로 닫을 수 없고, 휴대전화에서 가격표 일부가 화면 밖으로 벗어납니다.
+- **확인한 범위:** 홈과 가격 페이지, 문의 팝업을 390·768·1440 CSS 픽셀 폭에서 점검한 것으로 가정합니다. 화면 폭은 실제 기기 전체를 대표하지 않습니다.
+- **방문자에게 생기는 일:** 마우스를 사용하지 않는 방문자가 팝업에서 빠져나오기 어렵고, 휴대전화 방문자는 가격표 오른쪽을 읽기 어렵습니다.
+- **지금 할 일:** 팝업의 닫기 기능과 가격표의 좁은 화면 배치를 수정하고, 해당 화면을 다시 확인합니다.
+- **미확인 사항:** 실제 문의 전송과 운영자에게 메시지가 도착하는지는 안전한 테스트 환경이 없어 확인하지 못했습니다.
 
-## Mechanical gate
+등급: `business` · 사이트 요구사항: 운영자가 제공한 가격표를 기준으로 했다고 가정 · 수정 여부: 리뷰만 요청받아 수정하지 않음
 
-| Tool | Conditions | Result | Key output |
-|---|---|---|---|
-| static-check | `node static-check.mjs .` | RAN | WARN=2 (unverified candidates) (two images over budget) |
-| build | `npm run build` | PASS | exit 0 |
-| lint | `npm run lint` | PASS | exit 0 |
-| HTML validator | html-validate | SKIPPED | not installed |
-| axe/pa11y | pa11y, WCAG 2.2 AA | PASS | 0 errors on 5 pages |
-| Lighthouse | mobile, / | SCORES | Perf 88 · A11y 100 · BP 96 · SEO 100; LCP 2.1s · CLS 0.04 · INP n/a (lab) |
+## 우선순위별 검토 사항
 
-## Coverage
+### W-01 — 키보드로 문의 팝업을 닫을 수 없음
 
-| Page | 1440 | 768 | 390 | Console errors |
-|---|---|---|---|---|
-| / | ✓ | ✓ | ✓ | 0 |
-| /treatment | ✓ | ✓ | ✓ | 0 |
-| /price | ✓ | ✓ | ✓ | 0 |
-| /reserve | ✓ | ✓ | ✓ | 0 |
-| /directions | ✓ | ✓ | ✓ | 1 (map widget warning) |
+- **상태와 우선순위:** 확인된 문제, Major. 키보드 사용자의 주요 동작이 막힙니다.
+- **어떻게 확인했나요?** 문의 버튼을 연 뒤 Tab으로 이동해도 닫기 버튼에 초점이 가지 않았고 Escape도 동작하지 않았다고 가정합니다. 가상 증거: `shots/dialog-keyboard.png`.
+- **판단 근거:** [WCAG 2.2 키보드 조작 기준 2.1.1](https://www.w3.org/TR/WCAG22/#keyboard)과 [키보드 함정 방지 2.1.2](https://www.w3.org/TR/WCAG22/#no-keyboard-trap). 실제 판정 시 적용 조건과 동작을 확인해야 합니다.
+- **권장 조치:** 키보드로 닫기 버튼을 선택하고 조작할 수 있게 하고, 팝업을 닫은 뒤 초점을 원래 버튼으로 돌려줍니다. 키보드와 관련 보조 기술로 다시 확인합니다.
 
-## Findings
+### W-02 — 가격표가 휴대전화 화면을 벗어남
 
-Counts: Critical 0 · Major 1 · Minor 2 · UNVERIFIED 1
+- **상태와 우선순위:** 확인된 문제, Major. 일부 가격을 읽을 수 없습니다.
+- **어떻게 확인했나요?** `/price`를 390 CSS 픽셀 폭으로 열었을 때 오른쪽 열이 잘렸다고 가정합니다. 가상 증거: `shots/price-390.png`.
+- **권장 조치:** 좁은 화면에서도 모든 가격을 읽을 수 있도록 표 배치를 조정합니다. 390·768·1440 폭에서 다시 확인하고 가격 내용이 바뀌지 않았는지 비교합니다.
 
-| ID | Lens | Severity | Status | Page/viewport | Summary |
-|---|---|---|---|---|---|
-| W-01 | 2 Responsive | Major | CONFIRMED | /price, 390px | Price table overflows the phone screen; right column unreadable (screenshot price-390-before.png) |
-| W-02 | 4 Accessibility | Major | CONFIRMED | all, keyboard | Popup close button unreachable by keyboard despite a perfect automated score |
-| W-03 | 5 Performance | Minor | CONFIRMED | /, mobile | Two images 260–310KB; resizing brings LCP down further |
-| W-04 | 7 Privacy | — | UNVERIFIED | /reserve | Whether the form service stores submissions in the operator's account could not be verified from the site alone — operator to confirm in the service dashboard |
+### W-03 — 문의가 운영자에게 실제로 도착하는지
 
-Conditions for publish: fix W-01 and W-02 and verify both affected flows. W-02 currently blocks keyboard-only visitors.
+- **상태와 우선순위:** `UNVERIFIED`. 안전한 테스트 전송과 수신 확인이 없어 동작 여부를 단정할 수 없습니다.
+- **다음 확인:** 운영자가 허가한 테스트 환경에서 시험 데이터를 전송하고, 정상 안내와 실제 수신을 확인합니다.
 
-## Rollback
+## 검사 범위와 결과
 
-Pre-fix backup: commit `a1b2c3d`. Undo: redeploy that commit.
+| 검사 | 예시 결과 | 범위와 한계 |
+|---|---|---|
+| HTML 정적 후보 검사 | RAN | 경고는 확인이 필요한 후보이며 사이트 합격 판정이 아닙니다. |
+| 브라우저 화면과 키보드 | FAIL | 선택한 화면과 폭에서 W-01·W-02 발견. 다른 화면은 미검사입니다. |
+| 자동 접근성 검사 | RAN | 사용한 도구·버전·규칙·대상은 실제 보고서에 기록합니다. 자동 검사는 일부 문제만 찾습니다. |
+| 실제 문의 전송 | SKIPPED | 안전한 테스트 환경과 허가가 없어 전송하지 않았습니다. |
+
+## 기술 상세와 안전한 복구
+
+실제 보고서에는 파일 위치·재현 단계와 민감정보를 제거한 증거를 적습니다. 이 예시에서는 파일을 수정하지 않았으므로 복구할 변경이 없습니다. 수정을 요청받은 경우 문제별로 기본 최대 3회 시도하고, 해결되지 않으면 시도 내용과 `BLOCKED` 상태를 기록합니다.

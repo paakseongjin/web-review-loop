@@ -15,7 +15,7 @@ Standing rules for every change to this website.
 
 ## Structure and accessibility
 
-- Semantic HTML: real buttons and links, one h1 per page, headings
+- Semantic HTML: real buttons and links, a clear main heading, headings
   in order, every input labelled, every image has alt text.
 - Every interactive element works by keyboard with visible focus.
 - No layout may scroll sideways at 360–1440px widths.
@@ -24,8 +24,8 @@ Standing rules for every change to this website.
 
 - Never put secret API keys in client-side code, HTML, or meta tags.
   Public/publishable keys only, and name them as such.
-- Never insert user or API data into the page with innerHTML;
-  use textContent or the framework's escaping.
+- Handle untrusted data with context-appropriate escaping or
+  sanitization; use textContent when inserting plain text.
 - Forms validate before sending, show plain-language errors, and
   never report success when the send failed.
 
@@ -35,8 +35,8 @@ Standing rules for every change to this website.
   source of truth, character for character. No invented claims,
   ratings, or awards.
 - No placeholder text, sample data, or test content on live pages.
-- Images: right image, right size (≤200KB, hero ≤400KB), modern
-  format where the stack supports it, width/height set.
+- Images: appropriate content and dimensions; optimize against the
+  project budget without degrading necessary quality.
 
 ## Change discipline
 

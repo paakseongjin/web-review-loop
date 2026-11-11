@@ -103,6 +103,8 @@ macOS / Linux에서는 첫 명령을 `claude plugin marketplace add /path/to/web
 3. 예를 들어 `현재 웹사이트를 리뷰만 해줘. 수정하지 말고 방문자에게 생기는 문제, 근거와 수정 제안을 쉽게 설명해줘.`라고 요청합니다. 수정까지 원하면 `확인된 문제를 수정하고 다시 검사해줘`라고 명시합니다.
 4. 보고서에서 **확인된 문제**, **가능성**, **개선 제안**, **검사하지 못한 부분**을 확인합니다. 자동 접근성 점수나 정적 검사만으로 전체 접근성·보안을 보증하지 않습니다.
 
+수정 요청이 있는 경우 문제별 수정은 기본 최대 3회 시도하며, 해결하지 못한 항목은 `BLOCKED`로 보고하고 독립적인 다른 작업은 계속합니다. 다른 횟수를 원하면 요청에 명시하세요. 브라우저나 검사 도구가 없으면 해당 검사는 `SKIPPED` 또는 `UNVERIFIED`로 기록됩니다. 화면 폭·주요 기능 등의 기본 검사 조건은 [검증 안내](../skills/web-review-loop/references/web-gates.md)를 참고하세요.
+
 스킬이 보이지 않으면 설치한 앱과 프로젝트, `SKILL.md`의 위치와 폴더 이름을 확인하고 앱을 재시작하세요. Claude Code는 `claude plugin list`, `claude plugin details web-review-loop`, `claude plugin validate <저장소-경로>`로 플러그인 상태를 확인할 수 있습니다. 이 저장소 루트에서 정적 검사만 실행하려면 `node skills/web-review-loop/scripts/static-check.mjs <프로젝트-경로>`를 사용하세요. HTML이 없으면 미검사입니다.
 
 ## 8. 갱신 및 제거
