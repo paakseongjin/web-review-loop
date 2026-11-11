@@ -62,7 +62,7 @@ For every mode, inventory the languages, versions, routes, APIs, storage, deploy
 
 1. Inventory: list discoverable in-scope pages/routes, their purposes and key actions (submit form, open menu, filter
    list, check out). Use `templates/site-spec.md`.
-2. Record the starting worktree, requested scope, acceptance criteria and a finding ledger as described in `references/review-convergence.md`. Find or reconstruct the intended behavior: existing `SPEC.md`,
+2. Record the starting worktree, requested scope, acceptance criteria and a finding ledger as described in `references/review-convergence.md`. Derive checks from the request or specification, not solely from the implementation or its tests. Find or reconstruct the intended behavior: existing `SPEC.md`,
    `AGENTS.md`, README, the operator's original request text.
    If reconstructed, mark the review `ORACLE: INFERRED`.
 3. Record the invariants that must hold on every page, e.g.:
