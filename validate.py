@@ -18,6 +18,8 @@ required = [
     "skills/web-review-loop/SKILL.md",
     "skills/web-review-loop/references/web-lenses.md",
     "skills/web-review-loop/references/code-and-architecture.md",
+    "skills/web-review-loop/references/full-stack-workflow.md",
+    "skills/web-review-loop/references/review-convergence.md",
     "skills/web-review-loop/references/web-gates.md",
     "skills/web-review-loop/references/evidence-and-severity.md",
     "skills/web-review-loop/references/plain-language-glossary.md",
@@ -85,6 +87,14 @@ for jf, want in [("plugin.json", "web-review-loop"),
                 errors.append("marketplace.json: plugins[] must include web-review-loop")
         except json.JSONDecodeError as e:
             errors.append(f"{jf}: invalid JSON: {e}")
+
+try:
+    agent_version = json.loads((ROOT / "plugin.json").read_text(encoding="utf-8")).get("version")
+    claude_version = json.loads((ROOT / ".claude-plugin/plugin.json").read_text(encoding="utf-8")).get("version")
+    if not agent_version or agent_version != claude_version:
+        errors.append("plugin manifests: versions must match and be non-empty")
+except (OSError, json.JSONDecodeError):
+    pass  # Missing files and invalid JSON are reported above.
 
 mdc = ROOT / "cursor/web-review-guardrails.mdc"
 if mdc.is_file() and "alwaysApply: true" not in mdc.read_text(encoding="utf-8"):

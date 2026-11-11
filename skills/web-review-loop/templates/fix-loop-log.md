@@ -1,12 +1,22 @@
-# Fix Loop Log — <site/scope>
+# Review and Fix Loop Log — <site/scope>
 
-One entry per distinct attempt. Default maximum: three attempts per finding; stop earlier if no safe new approach exists. Mark a finding BLOCKED at the limit and continue independent findings. User-specified limits take precedence. Record what was verified and what remains unverified.
+Use in memory for read-only review; write a file only if requested or authorized. A round includes review, any authorized fix batch and its focused verification. Default maximum: three rounds total and three distinct fix attempts per finding; the first applicable limit stops that activity. User-specified limits take precedence. Preserve material risks and unresolved work in the final report.
 
-| # | Finding | Attempt | Change made | Re-render result (pages × widths) | Gate re-run | Outcome |
-|---|---|---|---|---|---|---|
-| 1 | W-01 | 1 | | | | FIXED / retry / BLOCKED; state whether your change was reverted |
+- Starting revision or baseline, pre-existing work and its limitations: <...>
+- Scope, acceptance criteria and checks: <...>
+- Reviewed state / last changed scope: <...>
 
-## Blocked findings — what was tried
+| Finding ID / failure class | Origin: introduced / pre-existing / unknown | Evidence and impact | Disposition and reason | Linked regression |
+|---|---|---|---|---|
+| W-01 | | | open / fixed and verified / rejected / deferred / blocked / unverified | |
 
-- W-xx: attempt 1 … / attempt 2 … / attempt 3 …
-  Why blocked and what the operator needs to decide:
+| Round | Reviewed state and scope | Fix batch / attempt per finding | Focused checks and affected regression checks | New material issue or failed check | Result |
+|---|---|---|---|---|---|
+| 1 | | | | | |
+
+## Stop and handoff
+
+- Actual rounds and stop reason: <criteria met / round limit / blocked / other>
+- Remaining or newly discovered material risks and next action: <...>
+- Failed, skipped or unverified checks, and what is needed: <...>
+- Safe rollback of this session's changes, if applicable: <...>

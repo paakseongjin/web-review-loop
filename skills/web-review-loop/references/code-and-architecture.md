@@ -21,7 +21,7 @@ Map users, goals, content priority, route hierarchy, navigation and key journeys
 
 ## Language, framework and currency review
 
-Inventory languages and framework versions from manifests, lockfiles, configuration and runtime where available. Identify actual supported browsers and runtime versions; if unknown, state the assumption. Examine HTML semantics, CSS layout and compatibility, JavaScript/TypeScript behavior and types, and the relevant framework's routing, rendering, state and lifecycle. For server-side languages or infrastructure encountered, assess within the user's scope and skill available; explicitly name gaps rather than claiming a complete security audit.
+Inventory languages and framework versions from manifests, lockfiles, configuration and runtime where available. Identify actual supported browsers and runtime versions; if unknown, state the assumption. Examine HTML semantics, CSS layout and compatibility, JavaScript/TypeScript behavior and types, and the relevant framework's routing, rendering, state and lifecycle. For server-side languages, frameworks and infrastructure, apply `full-stack-workflow.md` to the available in-scope components; explicitly name gaps rather than claiming a complete security audit.
 
 For a suspected obsolete or unsafe feature, verify the exact API, installed version and support status against current official documentation and migration/release notes; use browser compatibility tables or MDN Baseline as context, not a guarantee for the project's target devices. Distinguish deprecated, removed, unsupported, vulnerable, non-standard, experimental, merely old and stylistic preference. An old version or pattern is not automatically a defect. Identify impact and applicability, cite a precise authoritative URL and date checked, and propose an alternative compatible with the project. Consider migration cost, breaking changes and regression tests. If current documentation cannot be verified, say so and mark currency unverified. Do not require upgrades solely for novelty or install packages to check.
 
@@ -31,10 +31,12 @@ Use project requirements, reproducible runtime observations and source as eviden
 
 ## Review and fix loop
 
+Apply `review-convergence.md` for baseline, candidate verification, deduplication, round limits and safe stop conditions.
+
 1. Baseline the requested scope and existing state; identify change mode and risk. Review the actual diff and affected dependencies when present; use a bounded representative selection for larger sites.
 2. Gather evidence independently from code, safe execution, existing checks and applicable rules. Record checks not performed. Classify confirmed defects, potential risks, modernization suggestions and choices separately; prioritize by demonstrated impact and urgency.
 3. Provide the user a reviewable decision: what happens, who it affects, evidence and source, recommendation, expected benefit, possible tradeoff, priority and what remains unknown. Do not make a finding sound confirmed merely because a tool warned.
-4. If fixes are requested, implement focused changes, verify affected behavior and compare against baseline; rerun relevant checks and affected routes. Record what changed, passed, failed or was skipped. Default to at most three distinct fix attempts per finding, or the user's specified limit. Stop earlier if no safe new approach exists; mark the finding BLOCKED at the limit and continue independent work. Review-only requests end with recommendations and make no edits.
+4. If fixes are requested, implement focused changes, verify affected behavior and compare against baseline; rerun relevant checks and affected routes. Record what changed, passed, failed or was skipped. Apply the total round and per-finding attempt limits in `review-convergence.md`; stop earlier if no safe new approach exists, record unresolved work and continue independent work where safe. Review-only requests end with recommendations and make no edits.
 5. Never imply all pages or all security issues are covered from a sample. A clean finding list describes only inspected scope, not proof of absence.
 
 ## Standards and research (verify applicability and current versions)

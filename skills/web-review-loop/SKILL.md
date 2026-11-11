@@ -1,6 +1,6 @@
 ---
 name: web-review-loop
-description: Review or improve websites and web application code, including AI-generated sites and landing pages. Use for web code review, prelaunch QA, UI and responsive checks, accessibility, security, performance, maintainability, or website structure, including requests to fix and recheck findings. Use available browser and source evidence, document gaps, and explain findings and remedies in plain language.
+description: Build, review, debug or improve websites and full-stack web applications, including AI-generated code. Use for web development, code review, accessibility, security, performance or requested fixes. Verify applicable official guidance and explain evidence, risks and remedies in plain language.
 ---
 
 # Web Review Loop — Evidence-Based Review for AI-Generated Websites
@@ -11,9 +11,13 @@ Use browser evidence for user-facing behavior and source or configuration eviden
 Core principle: **an LLM review is a hypothesis generator.
 Browsers, validators, and measurements are the referees.**
 
-If the general `review-loop` skill is also installed, this skill
-specializes it for front-end websites. For back-end data safety
-(transactions, payments, databases), run `review-loop` as well.
+## Choose the requested mode
+
+- **Build:** When the user requests a website or feature, establish the intended users, behavior and constraints, inspect the existing project and implement the authorized scope. Choose a stack only if one is not already established, and explain consequential assumptions. Use the review and verification steps below on the new work; do not treat a missing baseline as a defect.
+- **Review:** Inspect and report only; do not edit project files. Bound the review to the requested changes or a representative full-stack sample.
+- **Debug or fix:** Investigate the reported symptom or authorized findings, reproduce where safe, trace the cause, make focused changes and verify affected behavior. Separate confirmed failures from preventive changes.
+
+For every mode, inventory the languages, versions, routes, APIs, storage, deployment and trust boundaries that are relevant and available. Apply `references/full-stack-workflow.md` to server, data and source verification and `references/review-convergence.md` to review and fix loops; list unavailable components and do not infer their safety. Run browser phases only when user-facing pages are in scope; a focused API or code task does not require screenshots or a publication verdict.
 
 ## Hard rules (never break these)
 
@@ -32,13 +36,10 @@ specializes it for front-end websites. For back-end data safety
    score improve. Improving a metric by removing the thing measured
    is fraud, not a fix — flag it if a prior change did this.
 5. **Respect the requested mode.** A review is read-only unless fixes are requested. For authorized fixes, group related changes where appropriate, verify affected behavior and avoid overwriting pre-existing user changes. Investigate regressions and revert only your own changes if necessary.
-6. **Numbers need conditions.** Every performance or SEO number
-   states the page, device profile, and tool that produced it.
-   A Lighthouse score quoted without its page and profile is not
-   evidence.
+6. **Numbers need evidence and conditions.** Report a number only when measured, counted from the inspected scope, calculated from traceable inputs, or verified in an applicable source. Give units, scope, method/tool and relevant conditions; for ratios give numerator and denominator, and for calculations the inputs and method. Distinguish observed values from sourced thresholds and project targets. Never invent measurements, savings, probabilities, coverage or benchmarks; when unavailable, say so. See `references/evidence-and-severity.md`.
 7. **Secrets and personal data are never printed.** API keys found in
    client-side code are reported by type and location only.
-8. **Bound retries.** By default attempt at most three distinct fixes per finding, verifying each. Stop earlier if no safe new approach is available; after three, mark that finding BLOCKED, explain attempts and next steps, and continue independent in-scope work. This is an operational limit, not proof that the issue cannot be fixed. Honor a user-specified limit.
+8. **Bound reviews and retries.** Default to at most three review rounds total, including the initial review, and at most three distinct fixes per finding; whichever cap is reached first stops that activity. Honor user-specified limits. At a limit, report unresolved work and do not claim a pass; see `references/review-convergence.md` for new material regressions and safe continuation.
 9. **Plain language out.** The final verdict is written for a
    non-developer: what a visitor would experience, not code jargon.
    Technical detail goes in the appendix of the report.
@@ -53,9 +54,7 @@ specializes it for front-end websites. For back-end data safety
   - `business` — contact/booking forms, newsletter, analytics, maps,
     third-party widgets. (Default when any form exists.)
   - `commerce` — login, payment, or sensitive/account data and server-side flows.
-    All phases, plus: recommend running the general `review-loop`
-    skill for the server/data side, and state that this skill's
-    verdict covers the front end only.
+    Include available server, data and payment integration paths in the requested scope; report unavailable paths and avoid claiming their safety.
 
 ## The loop
 
@@ -63,7 +62,7 @@ specializes it for front-end websites. For back-end data safety
 
 1. Inventory: list discoverable in-scope pages/routes, their purposes and key actions (submit form, open menu, filter
    list, check out). Use `templates/site-spec.md`.
-2. Find or reconstruct the intended behavior: existing `SPEC.md`,
+2. Record the starting worktree, requested scope, acceptance criteria and a finding ledger as described in `references/review-convergence.md`. Find or reconstruct the intended behavior: existing `SPEC.md`,
    `AGENTS.md`, README, the operator's original request text.
    If reconstructed, mark the review `ORACLE: INFERRED`.
 3. Record the invariants that must hold on every page, e.g.:
@@ -109,7 +108,9 @@ For a full review, read and apply the instructions in these sibling skill files 
 2. `../web-review-code/SKILL.md` — code behavior, security, maintainability and architecture.
 3. `../web-review-measurement/SKILL.md` — runtime gates, performance and measurement.
 
-These modules share `references/web-lenses.md`, `references/web-gates.md`, and `references/code-and-architecture.md` in this skill. Consolidate duplicate findings. Each finding follows `references/evidence-and-severity.md`, including a reproducible condition or source location, observed impact, applicable authority, confidence and remedy.
+For full-stack work also apply `references/full-stack-workflow.md`; record what server, API, database and deployment components were actually inspected.
+
+These modules share `references/web-lenses.md`, `references/web-gates.md`, and `references/code-and-architecture.md` in this skill. Verify candidates and their origin, consolidate duplicate findings, and retain dispositions across rounds according to `references/review-convergence.md`. Each finding follows `references/evidence-and-severity.md`, including a reproducible condition or source location, observed impact, applicable authority, confidence and remedy.
 
 ### Phase 4 — Reproduction
 
@@ -120,12 +121,7 @@ they pair with after-fix screenshots in the report.
 
 ### Phase 5 — Fix loop
 
-Only if the user requested or authorized fixes: per actionable finding, in severity order: smallest change that fixes
-the root cause → re-render affected pages at all 3 widths →
-re-run the gate items it touched → log in
-`templates/fix-loop-log.md`. Preserve the existing worktree and describe a safe way to undo only your changes; do not create commits or overwrite existing work without authorization.
-
-After each focused batch, compare the relevant criteria with the baseline and log evidence. Finish when requested, actionable findings are fixed and verified, or further work is blocked, out of scope, or requires unavailable access; report each remaining finding and skipped verification. Review-only requests stop after reporting. Never loop merely to eliminate minor aesthetic preferences.
+Only if the user requested or authorized development or fixes, apply the bounded review-and-fix procedure in `references/review-convergence.md`: fix actionable in-scope issues in proportionate batches, preserve the original baseline and user changes, rerun affected checks and inspect the latest changes for regressions. Use `templates/fix-loop-log.md` as an optional ledger, not an instruction to create a file in review-only mode. Limit both total review rounds and distinct attempts per finding; report the actual stopping reason and any unresolved or unverified work. Do not reopen a resolved item without new evidence, and never suppress a material newly discovered risk because a limit was reached.
 
 Forbidden: redesigning unrelated pages, swapping frameworks or
 libraries, bulk reformatting, "improving" copy or visuals the
@@ -137,13 +133,13 @@ Use `templates/web-review-report.md`. It must contain:
 
 1. **Plain-language verdict**: `PUBLISHABLE` /
    `PUBLISHABLE WITH CONDITIONS` / `NOT PUBLISHABLE` / `BLOCKED`,
-   plus a concise explanation for a non-developer: what was checked, what a visitor would experience, what remains uncertain, and the next action. Do not issue a publication verdict for a narrow code-only review; state its limited scope.
+   plus a concise explanation for a non-developer: what was checked, what a visitor would experience, what remains uncertain, and the next action. Do not issue a publication verdict for a narrow code-only review; state its limited scope. Any wider verdict covers only inspected components, never certifies security or legal compliance, and identifies unexamined server, data or deployment boundaries.
 2. Gate table (tool, result, conditions) including `SKIPPED` rows.
 3. Page × viewport coverage table: which pages were actually
    rendered and screenshotted, and which were not.
-4. Findings in priority order: plain-language problem and effect, evidence, source and applicability, recommended fix, benefit/tradeoff, status and uncertainty. Give before/after screenshots where relevant and actually captured. Separate confirmed defects from suggestions and possible risks.
-5. `UNVERIFIED` and `BLOCKED` items, listed explicitly.
-6. Measured numbers with conditions (page, profile, tool).
+4. Findings in priority order: identify must-fix items and why they block the agreed outcome; distinguish confirmed defects, plausible risks and optional improvements. Include plain-language effect, evidence, applicable criterion, remedy, status and uncertainty. Give before/after screenshots only when actually captured. Separately report evidenced strengths and behaviors to preserve with their supporting evidence, scope and reason; if none can be verified, say so rather than inventing praise. Before a fix, identify relevant behaviors to preserve and recheck them where practical. Follow `references/evidence-and-severity.md` for the evidence and claim audit.
+5. `UNVERIFIED` and `BLOCKED` items, listed explicitly, plus the review round count, stop reason, finding origin and dispositions; separately flag new regressions and important pre-existing issues.
+6. Measured or calculated numbers with method, units, scope and conditions; verified thresholds with their source and applicability. Omit unavailable values and mark the gap.
 7. For changes actually made, safe rollback instructions; otherwise state that no changes were made.
 
 ## Budgets used by the lenses (defaults)
