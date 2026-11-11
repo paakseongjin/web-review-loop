@@ -1,0 +1,33 @@
+---
+description: Standing guardrails for AI-built websites — render before claiming, accessibility and content integrity, client-side safety. Full procedure lives in the web-review-loop skill.
+alwaysApply: true
+globs: **/*.html, **/*.css, **/*.js, **/*.ts, **/*.tsx, **/*.jsx
+---
+
+# Web Review Guardrails (always on for web files)
+
+- Never claim a page works unless you rendered it in this session
+  (phone 390px and desktop 1440px) and checked the console. A page
+  you did not render is reported as not rendered.
+- Never remove alt text, labels, meta tags, titles, or validation
+  rules to make a check or a Lighthouse score pass.
+- Semantic HTML only: real <button>/<a>, a clear main heading, headings
+  in order, every input labelled, every image has alt text.
+- Every interactive element must work by keyboard with visible focus.
+  No layout may scroll sideways at 360–1440px widths.
+- Never put secret API keys in client-side code, HTML, or meta tags.
+  Public/publishable keys only, named as such.
+- Handle untrusted data with context-appropriate escaping or sanitization; use textContent for plain text.
+- Forms validate before sending, show plain-language errors next to
+  the fields, preserve the visitor's input on failure, and never
+  report success when the send failed.
+- Prices, hours, contacts, and names come from the operator's source
+  of truth, character for character. No invented claims, ratings,
+  awards, or placeholder/test content on live pages.
+- Images: appropriate content and dimensions; optimize against the project budget without degrading necessary quality.
+- Small changes, one concern at a time. No redesigns or framework
+  swaps inside a fix. Name any new third-party script in the change
+  description.
+- For a full website review, run the `web-review-loop` skill instead
+  of a free-form review: gates first, render and screenshot, lens
+  reviews, evidence appropriate to the finding before fixes, plain-language verdict.

@@ -1,0 +1,18 @@
+{
+  "author": {
+    "name": "web-review-loop"
+  },
+  "description": "Evidence-based website and code review with accessibility, security, architecture and plain-language reporting.",
+  "keywords": [
+    "website-review",
+    "html",
+    "css",
+    "javascript",
+    "accessibility",
+    "lighthouse",
+    "vibe-coding"
+  ],
+  "license": "MIT",
+  "name": "web-review-loop",
+  "version": "1.0.0"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "web-review-loop-local",
+  "owner": {
+    "name": "web-review-loop"
+  },
+  "plugins": [
+    {
+      "description": "Evidence-based website and code review with clear reports.",
+      "name": "web-review-loop",
+      "source": "./"
+    }
+  ],
+  "description": "Evidence-based website review skills and tools."
+}
