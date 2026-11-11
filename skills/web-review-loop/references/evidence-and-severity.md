@@ -24,6 +24,8 @@ Use page/viewport for rendered findings; source findings need a file, line and e
 
 ## Severity
 
+Explain priority with the affected flow, user group, evidence, likelihood and scope. A score or project-budget miss alone is not automatically Major or a standard violation. When impact or measurement is unknown, label it unverified and request the missing evidence.
+
 - **Critical** — a key flow is unusable (form cannot be submitted,
   checkout/menu broken); a secret key is exposed in client code;
   visitors' personal data leaks (e.g. in URLs or to an unintended
@@ -31,7 +33,7 @@ Use page/viewport for rendered findings; source findings need a file, line and e
   Blocks publish.
 - **Major** — a real visitor group is blocked or misled (keyboard
   users, mobile users); wrong price/contact/fact on a live page;
-  significant accessibility or performance budget failure;
+  measured accessibility failure or performance problem with demonstrated material user impact;
   form errors silently lose user input. Blocks publish on
   `business`/`commerce`.
 - **Minor** — quality and drift issues with a workaround: dead CSS,

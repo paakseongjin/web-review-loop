@@ -20,13 +20,13 @@ console line, measurement, or file:line). Otherwise UNVERIFIED.
 ## Lens 2 — CSS & Responsive Layout
 
 - No horizontal scrolling at 360 / 390 / 768 / 1440px widths.
-- No overlap, cut-off, or unreadably small text at any width; tap
+- Record route, viewport, element and observed clipping/overlap or measured contrast/zoom failure. Check reflow at 320 CSS px equivalent per WCAG 2.2 SC 1.4.10 and its exceptions. For tap
   prefer generous targets (44×44 CSS px where practical); evaluate WCAG 2.2 AA against 24×24 CSS px and its exceptions.
 - Layout does not jump while loading (space reserved for images,
   ads, embeds, webfonts) — ties to CLS in Lens 5.
 - The design follows the project's existing tokens/conventions;
   one-off hard-coded colors/spacings that duplicate a token are
-  Minor; a second, conflicting style system is Major.
+  investigate as a maintainability concern; prioritize based on demonstrated inconsistency, affected users and change cost, not the number of style systems.
 - States exist and look intentional: hover, focus-visible (keyboard
   users must see focus), active, disabled, loading.
 - Dark mode, if present, is complete: no unreadable surface pairs.
@@ -117,9 +117,7 @@ Field targets at the 75th percentile, by device: LCP ≤ 2.5s, INP ≤ 200ms, CL
 - Check `target="_blank"` behavior against the supported browsers: current browsers generally imply `noopener`; assess explicit `rel` for legacy support or project policy rather than declaring its absence an automatic vulnerability.
 - Third-party embeds (maps, chat, video) are inventoried; anything
   the operator did not intend is a finding.
-- Where the host supports them, note missing security headers
-  (CSP, X-Content-Type-Options, Referrer-Policy) as Minor/Note for
-  `showcase`, Major for `commerce`.
+- Review security headers in the actual deployment context. Assess which attack surface and compensating controls apply before assigning priority; a missing header alone does not establish a vulnerability or automatic severity.
 
 ## Lens 8 — Forms & User Flows
 

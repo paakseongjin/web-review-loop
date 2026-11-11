@@ -10,7 +10,10 @@ ROOT = Path(__file__).resolve().parent
 errors, notes = [], []
 
 required = [
-    "README.md", "install.sh", "install.ps1",
+    "README.md", "install.sh", "install.ps1", "plugin.json",
+    "skills/web-review-experience/SKILL.md",
+    "skills/web-review-code/SKILL.md",
+    "skills/web-review-measurement/SKILL.md",
     ".claude-plugin/plugin.json", ".claude-plugin/marketplace.json",
     "skills/web-review-loop/SKILL.md",
     "skills/web-review-loop/references/web-lenses.md",
@@ -53,12 +56,29 @@ if skill.is_file():
         if not (skill.parent / ref).is_file():
             errors.append(f"SKILL.md references missing file: {ref}")
 
-for jf, want in [(".claude-plugin/plugin.json", "web-review-loop"),
+for module_name in ("web-review-experience", "web-review-code", "web-review-measurement"):
+    module = ROOT / "skills" / module_name / "SKILL.md"
+    if module.is_file():
+        module_text = module.read_text(encoding="utf-8")
+        if not re.search(rf"^name:\s*{re.escape(module_name)}\s*$", module_text, re.M):
+            errors.append(f"{module_name}: frontmatter name mismatch")
+        if not re.search(r"^description:\s*\S", module_text, re.M):
+            errors.append(f"{module_name}: description missing")
+        for ref in re.findall(r"`(\.\./web-review-loop/references/[\w.\-]+)`", module_text):
+            if not (module.parent / ref).is_file():
+                errors.append(f"{module_name}: missing shared reference: {ref}")
+    if skill.is_file() and f"../{module_name}/SKILL.md" not in text:
+        errors.append(f"orchestrator does not reference {module_name}")
+
+for jf, want in [("plugin.json", "web-review-loop"),
+                 (".claude-plugin/plugin.json", "web-review-loop"),
                  (".claude-plugin/marketplace.json", None)]:
     p = ROOT / jf
     if p.is_file():
         try:
             data = json.loads(p.read_text(encoding="utf-8"))
+            if jf == "plugin.json" and data.get("$schema") != "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json":
+                errors.append("plugin.json: incorrect Agent Plugin schema")
             if want and data.get("name") != want:
                 errors.append(f"{jf}: name must be '{want}'")
             if not want and "web-review-loop" not in [pl.get("name") for pl in data.get("plugins", [])]:

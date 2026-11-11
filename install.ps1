@@ -7,20 +7,24 @@ param(
 $ErrorActionPreference = "Stop"
 $Src = Split-Path -Parent $MyInvocation.MyCommand.Path
 $Stamp = Get-Date -Format "yyyyMMdd-HHmmss"
-function Install-Skill([string]$Dest) {
+function Install-Skill([string]$Dest, [string]$Name) {
   if (Test-Path $Dest) {
     Rename-Item $Dest "$Dest.bak-$Stamp"
     Write-Host "backed up existing: $Dest.bak-$Stamp"
   }
   New-Item -ItemType Directory -Force -Path (Split-Path $Dest) | Out-Null
-  Copy-Item -Recurse (Join-Path $Src "skills\web-review-loop") $Dest
+  Copy-Item -Recurse (Join-Path $Src "skills\$Name") $Dest
   Write-Host "installed skill -> $Dest"
 }
 if ($Mode -eq "claude" -or $Mode -eq "both") {
-  Install-Skill (Join-Path $Target ".claude\skills\web-review-loop")
+  foreach ($Name in @("web-review-loop", "web-review-experience", "web-review-code", "web-review-measurement")) {
+    Install-Skill (Join-Path $Target ".claude\skills\$Name") $Name
+  }
 }
 if ($Mode -eq "cursor" -or $Mode -eq "both") {
-  Install-Skill (Join-Path $Target ".cursor\skills\web-review-loop")
+  foreach ($Name in @("web-review-loop", "web-review-experience", "web-review-code", "web-review-measurement")) {
+    Install-Skill (Join-Path $Target ".cursor\skills\$Name") $Name
+  }
   $RulesDir = Join-Path $Target ".cursor\rules"
   New-Item -ItemType Directory -Force -Path $RulesDir | Out-Null
   $RuleDest = Join-Path $RulesDir "web-review-guardrails.mdc"

@@ -22,16 +22,22 @@ Heuristic regex scan of source HTML only. Results are candidate warnings, not va
 ## Default verification criteria
 
 - Selected pages load at 390, 768 and 1440 CSS px unless scope or target devices call for alternatives; essential content is legible and there is no unintended page-level horizontal overflow at those tested widths.
+- WCAG 2.2 SC 1.4.10: separately evaluate reflow at 320 CSS px equivalent for vertical scrolling content, or 256 CSS px equivalent height for horizontal scrolling content, applying the criterion's two-dimensional-layout exceptions. Record scope and whether it was actually tested: https://www.w3.org/TR/WCAG22/#reflow
 - Each selected primary action is visibly present and, where safe, works as specified. For external submissions or purchases without an authorized test environment, check only safe steps and mark actual submission/receipt UNVERIFIED.
 - No unexplained relevant uncaught console errors or failed required requests occur during the tested flows. Identify third-party, pre-existing or irrelevant errors separately; zero observed is limited to the observation window.
 - Relevant project build/type/lint/tests run and pass when available and safe; skipped checks remain SKIPPED. Re-run affected checks after changes. Neither these checks nor a clean heuristic scan establishes whole-site correctness, accessibility or security.
 
-## Project gates (via scripts/web-gate.sh)
+## Project gates (project-specific scripts or scripts/web-gate.sh)
+
+The bundled script runs detected package `build`, `lint`, and `test` scripts,
+local TypeScript when present, and installed gitleaks. It does not independently
+discover ESLint or Stylelint; the rows below also describe optional separate
+project checks. Inspect each command for side effects before running it.
 
 | Check | Command (first that exists) |
 |---|---|
 | Build | `npm run build` / `pnpm build` / `yarn build` / `bun run build` |
-| Types | `npx tsc --noEmit` (if typescript present) |
+| Types | `node node_modules/typescript/bin/tsc --noEmit` (if installed locally) |
 | JS lint | `npm run lint` or `npx eslint .` |
 | CSS lint | `npx stylelint "**/*.css"` (if stylelint configured) |
 | Tests | `npm test` (unit/component/e2e suites the project has) |
@@ -49,7 +55,4 @@ Heuristic regex scan of source HTML only. Results are candidate warnings, not va
 ## Recording format
 
 One row per check: Tool | Command/URL | Profile/conditions |
-Result (PASS/FAIL/SKIPPED) | Key output (score, error count, first
-error line). Quote the first real error, not just a count — counts
-without content invite blind trust, which is what this skill exists
-to remove.
+Result (PASS/FAIL/SKIPPED) | Key output (score, error count, sanitized diagnostic). The bundled gate suppresses command output because it can contain secrets; inspect details only through a secure local workflow and never publish raw secrets or personal data. Exit 2 means no checks ran; exit 1 means a check failed; exit 0 means at least one ran and none failed, not an overall site verdict.

@@ -101,26 +101,15 @@ Serve or open the site using its existing documented preview and available brows
 
 Record observations per page in the report appendix. Continue source review even if rendering is unavailable; record coverage and runtime verification gaps.
 
-### Phase 3 — Lens reviews (one lens at a time)
+### Phase 3 — Domain reviews
 
-Use `references/web-lenses.md`. In order:
+For a full review, read and apply the instructions in these sibling skill files in order; do not assume plugin discovery automatically executes them. If a file is missing, record that domain as SKIPPED and continue with available evidence. Use focused modules when the user requests a narrower review:
 
-1. HTML structure & semantics
-2. CSS & responsive layout
-3. JavaScript behavior & safety
-4. Accessibility (WCAG 2.2 AA target)
-5. Performance (Core Web Vitals budgets)
-6. SEO & sharing (meta, OG, sitemap, robots)
-7. Security & privacy (client side)
-8. Forms & user flows (incl. error and empty states)
-9. Content integrity (facts, prices, contacts vs. source of truth)
-10. Assets, links & third parties
-11. Code review, maintainability, current language/framework guidance & web architecture: read `references/code-and-architecture.md`. For every consequential recommendation cite applicable, verified sources and distinguish requirements from suggestions.
+1. `../web-review-experience/SKILL.md` — structure, responsiveness, accessibility and user journeys.
+2. `../web-review-code/SKILL.md` — code behavior, security, maintainability and architecture.
+3. `../web-review-measurement/SKILL.md` — runtime gates, performance and measurement.
 
-Each finding uses the evidence format in
-`references/evidence-and-severity.md`: page + viewport, what a
-visitor sees/experiences, expected vs. actual, and the evidence
-(screenshot path, console line, measured number, or file:line).
+These modules share `references/web-lenses.md`, `references/web-gates.md`, and `references/code-and-architecture.md` in this skill. Consolidate duplicate findings. Each finding follows `references/evidence-and-severity.md`, including a reproducible condition or source location, observed impact, applicable authority, confidence and remedy.
 
 ### Phase 4 — Reproduction
 
@@ -163,8 +152,7 @@ Use `templates/web-review-report.md`. It must contain:
   LCP ≤ 2.5s, INP ≤ 200ms, CLS ≤ 0.1. Lighthouse lab LCP/CLS
   are diagnostics, not field compliance; Lighthouse does not provide field INP.
   Use lab TBT as a diagnostic proxy, never label it INP.
-- Lighthouse (mobile, key pages): Performance ≥ 85, Accessibility
-  ≥ 95, Best Practices ≥ 95, SEO ≥ 95 — as signals, not proof.
+- Lighthouse scores are diagnostic signals, not compliance thresholds. Use an explicitly agreed project budget if one exists; record version, conditions and variance.
   A perfect accessibility score does **not** mean the site is
   accessible; automated tools only detect a subset of WCAG issues,
   so keyboard and screen-reader spot checks in Lens 4 are mandatory

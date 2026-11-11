@@ -1,0 +1,10 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "web-review-loop",
+  "version": "1.1.0",
+  "description": "Evidence-based website review workflow and focused review skills.",
+  "author": {
+    "name": "web-review-loop"
+  },
+  "license": "MIT"
+}
